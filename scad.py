@@ -14,8 +14,8 @@ def make_scad(**kwargs):
         filter = ""
         #filter = "test"
 
-        kwargs["save_type"] = "none"
-        #kwargs["save_type"] = "all"
+        #kwargs["save_type"] = "none"
+        kwargs["save_type"] = "all"
         
         kwargs["overwrite"] = True
         
@@ -38,7 +38,7 @@ def make_scad(**kwargs):
     if True:
 
         part_default = {} 
-        part_default["project_name"] = "test" ####### neeeds setting
+        part_default["project_name"] = "oomlout_oobb_packaging_cardboard_roll" ####### neeeds setting
         part_default["full_shift"] = [0, 0, 0]
         part_default["full_rotations"] = [0, 0, 0]
         
@@ -70,26 +70,76 @@ def get_base(thing, **kwargs):
     #pos = copy.deepcopy(pos)
     #pos[2] += -20
 
+    dep_main = 2
+    dep = dep_main
+
     #add plate
     p3 = copy.deepcopy(kwargs)
     p3["type"] = "p"
     p3["shape"] = f"oobb_plate"    
-    p3["depth"] = depth
+    p3["depth"] = dep
+    p3["width"] = 3
+    p3["height"] = 1
     #p3["m"] = "#"
     pos1 = copy.deepcopy(pos)         
+    pos1[2] += -dep
     p3["pos"] = pos1
     oobb_base.append_full(thing,**p3)
+
+    #add holder bumps
+    p3 = copy.deepcopy(kwargs)
+    p3["type"] = "p"
+    p3["shape"] = f"rounded_rectangle"
+    wid = 5
+    hei = 10
+    dep = 14
+    size = [wid, hei, dep]
+    p3["size"] = size
+    p3["r"] = 2.5
+    pos1 = copy.deepcopy(pos)
+    pos1[1] += dep/2
+    pos1[2] += -hei/2 + 3.5
+    p3["pos"] = pos1    
+    rot1 = [90, 0, 0]
+    p3["rot"] = rot1
+    #p3["m"] = "#"
+
+    ribs = 4
+    spacing_rib = 8
+    for i in range(ribs):
+        p4 = copy.deepcopy(p3)
+        pos1 = copy.deepcopy(p4["pos"])
+        pos1[0] += -((ribs-1)/2 * spacing_rib) + i*spacing_rib
+        p4["pos"] = pos1
+        oobb_base.append_full(thing,**p4)
+    
+
+
+
+    
+    
+
+    #add slice underneath
+    p3 = copy.deepcopy(kwargs)
+    p3["type"] = "n"
+    p3["shape"] = f"oobb_slice"
+    #p3["m"] = "#"
+    pos1 = copy.deepcopy(pos)
+    pos1[2] += -500 - dep_main
+    p3["pos"] = pos1
+    oobb_base.append_full(thing,**p3)
+    
     #add holes
     p3 = copy.deepcopy(kwargs)
     p3["type"] = "p"
     p3["shape"] = f"oobb_holes"
     p3["both_holes"] = True  
     p3["depth"] = depth
-    p3["holes"] = "perimeter"
+    #p3["holes"] = "perimeter"
     #p3["m"] = "#"
     pos1 = copy.deepcopy(pos)         
     p3["pos"] = pos1
-    oobb_base.append_full(thing,**p3)
+    #oobb_base.append_full(thing,**p3)
 
     if prepare_print:
         #put into a rotation object

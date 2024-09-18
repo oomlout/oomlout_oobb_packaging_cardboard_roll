@@ -1,0 +1,6 @@
+* [packaging](packaging)
+  * [cardboard_roll](packaging/cardboard_roll)
+    * [300_mm_width_75000_mm_length_3_5_mm_depth](packaging/cardboard_roll/300_mm_width_75000_mm_length_3_5_mm_depth)
+      * [kraft](packaging/cardboard_roll/300_mm_width_75000_mm_length_3_5_mm_depth/kraft)
+        * [rajapack](packaging/cardboard_roll/300_mm_width_75000_mm_length_3_5_mm_depth/kraft/rajapack)
+          * [cp300](packaging/cardboard_roll/300_mm_width_75000_mm_length_3_5_mm_depth/kraft/rajapack/cp300)
