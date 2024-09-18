@@ -15,7 +15,7 @@ def make_scad(**kwargs):
         #filter = "test"
 
         kwargs["save_type"] = "none"
-        #kwargs["save_type"] = "all"
+        kwargs["save_type"] = "all"
         
         kwargs["overwrite"] = True
         
@@ -26,9 +26,9 @@ def make_scad(**kwargs):
     # default variables
     if True:
         kwargs["size"] = "oobb"
-        kwargs["width"] = 1
+        kwargs["width"] = 5
         kwargs["height"] = 1
-        kwargs["thickness"] = 3
+        kwargs["thickness"] = 2
         
     # project_variables
     if True:
@@ -37,18 +37,32 @@ def make_scad(**kwargs):
     # declare parts
     if True:
 
-        part_default = {} 
-        part_default["project_name"] = "oomlout_oobb_packaging_cardboard_roll" ####### neeeds setting
-        part_default["full_shift"] = [0, 0, 0]
-        part_default["full_rotations"] = [0, 0, 0]
-        
-        part = copy.deepcopy(part_default)
-        p3 = copy.deepcopy(kwargs)
-        #p3["thickness"] = 6
-        part["kwargs"] = p3
-        part["name"] = "base"
-        parts.append(part)
+        sizes = []
+        sizes.append([1, 5])
+        sizes.append([2, 5])
+        sizes.append([2, 3])
+        sizes.append([3, 3])
 
+        for size in sizes:
+            height = size[0]
+            width = size[1]
+            part_default = {} 
+            part_default["project_name"] = "oomlout_oobb_packaging_cardboard_roll" ####### neeeds setting
+            part_default["full_shift"] = [0, 0, 0]
+            part_default["full_rotations"] = [0, 0, 0]
+            
+            part = copy.deepcopy(part_default)
+            p3 = copy.deepcopy(kwargs)
+            p3["width"] = width
+            p3["height"] = height            
+            part["kwargs"] = p3
+
+            part["name"] = "base"
+            parts.append(part)
+
+            part_2 = copy.deepcopy(part)
+            part_2["kwargs"]["extra"] = "single_side"
+            parts.append(part_2)
         
     #make the parts
     if True:
@@ -64,13 +78,16 @@ def make_scad(**kwargs):
 def get_base(thing, **kwargs):
 
     depth = kwargs.get("thickness", 4)
+    width = kwargs.get("width", 5)
+    height = kwargs.get("height", 1)
+    extra = kwargs.get("extra", "")
     prepare_print = kwargs.get("prepare_print", False)
 
     pos = kwargs.get("pos", [0, 0, 0])
     #pos = copy.deepcopy(pos)
     #pos[2] += -20
 
-    dep_main = 2
+    dep_main = depth
     dep = dep_main
 
     #add plate
@@ -78,8 +95,6 @@ def get_base(thing, **kwargs):
     p3["type"] = "p"
     p3["shape"] = f"oobb_plate"    
     p3["depth"] = dep
-    p3["width"] = 3
-    p3["height"] = 1
     #p3["m"] = "#"
     pos1 = copy.deepcopy(pos)         
     pos1[2] += -dep
@@ -92,7 +107,7 @@ def get_base(thing, **kwargs):
     p3["shape"] = f"rounded_rectangle"
     wid = 5
     hei = 10
-    dep = 14
+    dep = (height * 15) - 1
     size = [wid, hei, dep]
     p3["size"] = size
     p3["r"] = 2.5
@@ -104,12 +119,17 @@ def get_base(thing, **kwargs):
     p3["rot"] = rot1
     #p3["m"] = "#"
 
-    ribs = 4
+    ribs = int(((width-2) * 15) / 8) + 1
+    if extra == "single_side":
+        ribs += 2
     spacing_rib = 8
     for i in range(ribs):
         p4 = copy.deepcopy(p3)
         pos1 = copy.deepcopy(p4["pos"])
-        pos1[0] += -((ribs-1)/2 * spacing_rib) + i*spacing_rib
+        start_pos = -((ribs-1)/2 * spacing_rib)
+        if extra == "single_side":
+            start_pos += 8
+        pos1[0] += start_pos + i*spacing_rib
         p4["pos"] = pos1
         oobb_base.append_full(thing,**p4)
     
@@ -135,11 +155,15 @@ def get_base(thing, **kwargs):
     p3["shape"] = f"oobb_holes"
     p3["both_holes"] = True  
     p3["depth"] = depth
-    #p3["holes"] = "perimeter"
+
+    if extra == "single_side":
+        p3["holes"] = ["top"]
+    else:
+        p3["holes"] = ["top","bottom"]
     #p3["m"] = "#"
     pos1 = copy.deepcopy(pos)         
     p3["pos"] = pos1
-    #oobb_base.append_full(thing,**p3)
+    oobb_base.append_full(thing,**p3)
 
     if prepare_print:
         #put into a rotation object
