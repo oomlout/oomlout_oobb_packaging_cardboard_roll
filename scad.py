@@ -38,10 +38,10 @@ def make_scad(**kwargs):
     if True:
 
         sizes = []
-        #sizes.append([1, 5])
+        sizes.append([1, 5])
         sizes.append([2, 5])
-        #sizes.append([2, 3])
-        #sizes.append([3, 3])
+        sizes.append([2, 3])
+        sizes.append([3, 3])
 
         for size in sizes:
             height = size[0]
