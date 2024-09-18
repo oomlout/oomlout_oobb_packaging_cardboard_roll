@@ -15,7 +15,7 @@ def make_scad(**kwargs):
         #filter = "test"
 
         kwargs["save_type"] = "none"
-        #kwargs["save_type"] = "all"
+        kwargs["save_type"] = "all"
         
         kwargs["overwrite"] = True
         
@@ -63,6 +63,10 @@ def make_scad(**kwargs):
             part_2 = copy.deepcopy(part)
             part_2["kwargs"]["extra"] = "single_side"
             parts.append(part_2)
+
+            part_3 = copy.deepcopy(part)
+            part_2["kwargs"]["extra"] = "cut_in_middle"
+            parts.append(part_3)
         
     #make the parts
     if True:
@@ -122,6 +126,9 @@ def get_base(thing, **kwargs):
     ribs = int(((width-2) * 15) / 8) + 1
     if extra == "single_side":
         ribs += 2
+    elif extra == "cut_in_middle":
+        if ribs % 2 == 0:
+            ribs += 1
     spacing_rib = 8
     for i in range(ribs):
         p4 = copy.deepcopy(p3)
@@ -136,7 +143,24 @@ def get_base(thing, **kwargs):
 
 
 
-    
+    #add slice in middle if cut_in_middle
+    if extra == "cut_in_middle":
+        p3 = copy.deepcopy(kwargs)
+        p3["type"] = "n"
+        p3["shape"] = f"cube"
+        big = 500
+        wid = 1.5
+        hei = big
+        dep = big
+        size = [wid, hei, dep]
+        p3["size"] = size
+        pos1 = copy.deepcopy(pos)
+        pos1[0] += 0
+        pos1[1] += -big/2
+        pos1[2] += -big/2
+        p3["pos"] = pos1
+        #p3["m"] = "#"
+        oobb_base.append_full(thing,**p3)
     
 
     #add slice underneath
