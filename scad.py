@@ -38,10 +38,10 @@ def make_scad(**kwargs):
     if True:
 
         sizes = []
-        sizes.append([1, 5])
+        #sizes.append([1, 5])
         sizes.append([2, 5])
-        sizes.append([2, 3])
-        sizes.append([3, 3])
+        #sizes.append([2, 3])
+        #sizes.append([3, 3])
 
         for size in sizes:
             height = size[0]
@@ -155,7 +155,7 @@ def get_base(thing, **kwargs):
         size = [wid, hei, dep]
         p3["size"] = size
         pos1 = copy.deepcopy(pos)
-        pos1[0] += 0
+        pos1[0] += -wid/2
         pos1[1] += -big/2
         pos1[2] += -big/2
         p3["pos"] = pos1
