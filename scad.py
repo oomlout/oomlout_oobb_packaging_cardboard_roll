@@ -42,33 +42,49 @@ def make_scad(**kwargs):
         sizes.append([2, 5])
         sizes.append([2, 3])
         sizes.append([3, 3])
+        sizes.append([17, 5])
         sizes.append([19, 5])
         sizes.append([5, 19])
 
-        for size in sizes:
-            height = size[0]
-            width = size[1]
-            part_default = {} 
-            part_default["project_name"] = "oomlout_oobb_packaging_cardboard_roll" ####### neeeds setting
-            part_default["full_shift"] = [0, 0, 0]
-            part_default["full_rotations"] = [0, 0, 0]
-            
-            part = copy.deepcopy(part_default)
-            p3 = copy.deepcopy(kwargs)
-            p3["width"] = width
-            p3["height"] = height            
-            part["kwargs"] = p3
+        extras = []
+        extras.append("")
+        extras.append("rotate_90_degree")
 
-            part["name"] = "base"
-            parts.append(part)
+        types = []
+        types.append("")
+        types.append("single_side")
+        types.append("cut_in_middle")
 
-            part_2 = copy.deepcopy(part)
-            part_2["kwargs"]["extra"] = "single_side"
-            parts.append(part_2)
+        for extra in extras:
+            for typ in types:
+                for size in sizes:
+                    extra_string = ""
+                    if typ != "":
+                        extra_string = f"{typ}"
+                    if extra != "":
+                        extra_string += f"_{extra}"
 
-            part_3 = copy.deepcopy(part)
-            part_2["kwargs"]["extra"] = "cut_in_middle"
-            parts.append(part_3)
+                    height = size[0]
+                    width = size[1]
+                    part_default = {} 
+                    part_default["project_name"] = "oomlout_oobb_packaging_cardboard_roll" ####### neeeds setting
+                    part_default["full_shift"] = [0, 0, 0]
+                    part_default["full_rotations"] = [0, 0, 0]
+                    
+                    part = copy.deepcopy(part_default)
+                    p3 = copy.deepcopy(kwargs)
+                    p3["width"] = width
+                    p3["height"] = height    
+                    if extra_string != "":        
+                        p3["extra"] = extra_string
+                    part["kwargs"] = p3
+
+                    part["name"] = "base"
+                    parts.append(part)
+
+                    
+
+                
         
     #make the parts
     if True:
@@ -108,45 +124,82 @@ def get_base(thing, **kwargs):
     oobb_base.append_full(thing,**p3)
 
     #add holder bumps
-    p3 = copy.deepcopy(kwargs)
-    p3["type"] = "p"
-    p3["shape"] = f"rounded_rectangle"
-    wid = 5
-    hei = 10
-    dep = (height * 15) - 1
-    size = [wid, hei, dep]
-    p3["size"] = size
-    p3["r"] = 2.5
-    pos1 = copy.deepcopy(pos)
-    pos1[1] += dep/2
-    pos1[2] += -hei/2 + 3.5
-    p3["pos"] = pos1    
-    rot1 = [90, 0, 0]
-    p3["rot"] = rot1
-    #p3["m"] = "#"
+    if "rotate_90_degree" in extra:
+        p3 = copy.deepcopy(kwargs)
+        p3["type"] = "p"
+        p3["shape"] = f"rounded_rectangle"
+        wid = 5
+        hei = 10
+        dep = ((width-1.5) * 15) - 1
+        size = [wid, hei, dep]
+        p3["size"] = size
+        p3["r"] = 2.5
+        pos1 = copy.deepcopy(pos)
+        pos1[0] += -dep/2
+        pos1[1] += 0
+        pos1[2] += -hei/2 + 3.5
+        p3["pos"] = pos1    
+        rot1 = [90, 0, 90]
+        p3["rot"] = rot1
+        #p3["m"] = "#"
 
-    ribs = int(((width-2) * 15) / 8) + 1
-    if extra == "single_side":
-        ribs += 2
-    elif extra == "cut_in_middle":
-        if ribs % 2 == 0:
-            ribs += 1
-    spacing_rib = 8
-    for i in range(ribs):
-        p4 = copy.deepcopy(p3)
-        pos1 = copy.deepcopy(p4["pos"])
-        start_pos = -((ribs-1)/2 * spacing_rib)
+        ribs = int(((height) * 15) / 8) + 1
         if extra == "single_side":
-            start_pos += 8
-        pos1[0] += start_pos + i*spacing_rib
-        p4["pos"] = pos1
-        oobb_base.append_full(thing,**p4)
-    
+            ribs += 2
+        elif extra == "cut_in_middle":
+            if ribs % 2 == 0:
+                ribs += 1
+        spacing_rib = 8
+        for i in range(ribs):
+            p4 = copy.deepcopy(p3)
+            pos1 = copy.deepcopy(p4["pos"])
+            start_pos = -((ribs-1)/2 * spacing_rib)
+            if extra == "single_side":
+                start_pos += 8
+            pos1[1] += start_pos + i*spacing_rib
+            p4["pos"] = pos1
+            oobb_base.append_full(thing,**p4)
+                
+    else:
+        p3 = copy.deepcopy(kwargs)
+        p3["type"] = "p"
+        p3["shape"] = f"rounded_rectangle"
+        wid = 5
+        hei = 10
+        dep = (height * 15) - 1
+        size = [wid, hei, dep]
+        p3["size"] = size
+        p3["r"] = 2.5
+        pos1 = copy.deepcopy(pos)
+        pos1[1] += dep/2
+        pos1[2] += -hei/2 + 3.5
+        p3["pos"] = pos1    
+        rot1 = [90, 0, 0]
+        p3["rot"] = rot1
+        #p3["m"] = "#"
+
+        ribs = int(((width-2) * 15) / 8) + 1
+        if extra == "single_side":
+            ribs += 2
+        elif extra == "cut_in_middle":
+            if ribs % 2 == 0:
+                ribs += 1
+        spacing_rib = 8
+        for i in range(ribs):
+            p4 = copy.deepcopy(p3)
+            pos1 = copy.deepcopy(p4["pos"])
+            start_pos = -((ribs-1)/2 * spacing_rib)
+            if extra == "single_side":
+                start_pos += 8
+            pos1[0] += start_pos + i*spacing_rib
+            p4["pos"] = pos1
+            oobb_base.append_full(thing,**p4)
+        
 
 
 
     #add slice in middle if cut_in_middle
-    if extra == "cut_in_middle":
+    if "cut_in_middle" in extra:
         p3 = copy.deepcopy(kwargs)
         p3["type"] = "n"
         p3["shape"] = f"cube"

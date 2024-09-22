@@ -4,5 +4,7 @@ project_repo: https://github.com/oomlout/oomlout_oobb_packaging_cardboard_roll
 production_format:
   oolc_1_slice_test:
     file_location: source_files/oolc_1.cdr
-  oolc_2_oomlout_oobb_packaging_cardboard_roll_slicer:
+  oolc_2_oomlout_oobb_packaging_cardboard_roll_slicer_long_way_300_mm_height:
     file_location: source_files/oolc_2.cdr
+  oolc_2_oomlout_oobb_packaging_cardboard_roll_slicer_short_way_200_mm_height:
+    file_location: source_files/oolc_3.cdr
