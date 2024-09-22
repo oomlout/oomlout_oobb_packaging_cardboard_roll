@@ -12,3 +12,13 @@
 * thickness:   
 * material:   
  
+
+### oolc_2_oomlout_oobb_packaging_cardboard_roll_slicer
+* link: [/oolc_2_oomlout_oobb_packaging_cardboard_roll_slicer](oolc_2_oomlout_oobb_packaging_cardboard_roll_slicer)  
+![](oolc_2_oomlout_oobb_packaging_cardboard_roll_slicer/working_300.png)  
+![](oolc_2_oomlout_oobb_packaging_cardboard_roll_slicer/image_300.jpg)  
+* width:   
+* height:   
+* thickness:   
+* material:   
+ 
