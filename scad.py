@@ -55,34 +55,47 @@ def make_scad(**kwargs):
         types.append("single_side")
         types.append("cut_in_middle")
 
-        for extra in extras:
-            for typ in types:
-                for size in sizes:
-                    extra_string = ""
-                    if typ != "":
-                        extra_string = f"{typ}"
-                    if extra != "":
-                        extra_string += f"_{extra}"
+        part_default = {} 
+        part_default["project_name"] = "oomlout_oobb_packaging_cardboard_roll" ####### neeeds setting
+        part_default["full_shift"] = [0, 0, 0]
+        part_default["full_rotations"] = [0, 0, 0]
 
-                    height = size[0]
-                    width = size[1]
-                    part_default = {} 
-                    part_default["project_name"] = "oomlout_oobb_packaging_cardboard_roll" ####### neeeds setting
-                    part_default["full_shift"] = [0, 0, 0]
-                    part_default["full_rotations"] = [0, 0, 0]
-                    
-                    part = copy.deepcopy(part_default)
-                    p3 = copy.deepcopy(kwargs)
-                    p3["width"] = width
-                    p3["height"] = height    
-                    if extra_string != "":        
-                        p3["extra"] = extra_string
-                    part["kwargs"] = p3
+        #declare racks
+        if False:
+            for extra in extras:
+                for typ in types:
+                    for size in sizes:
+                        extra_string = ""
+                        if typ != "":
+                            extra_string = f"{typ}"
+                        if extra != "":
+                            extra_string += f"_{extra}"
 
-                    part["name"] = "base"
+                        height = size[0]
+                        width = size[1]
+                        
+                        
+                        part = copy.deepcopy(part_default)
+                        p3 = copy.deepcopy(kwargs)
+                        p3["width"] = width
+                        p3["height"] = height    
+                        if extra_string != "":        
+                            p3["extra"] = extra_string
+                        part["kwargs"] = p3
+
+                    part["name"] = "rack"
                     parts.append(part)
-
-                    
+        #declare gears
+        if True:
+            diam = 3
+            part = copy.deepcopy(part_default)
+            p3 = copy.deepcopy(kwargs)
+            p3["width"] = diam
+            p3["height"] = diam
+            p3["depth"] = 3
+            part["kwargs"] = p3
+            part["name"] = "gear"
+            parts.append(part)
 
                 
         
@@ -97,7 +110,145 @@ def make_scad(**kwargs):
             else:
                 print(f"skipping {part['name']}")
 
-def get_base(thing, **kwargs):
+def get_gear(thing, **kwargs):
+
+    depth = kwargs.get("thickness", 4)
+    width = kwargs.get("width", 5)
+    height = kwargs.get("height", 1)
+    extra = kwargs.get("extra", "")
+    prepare_print = kwargs.get("prepare_print", False)
+
+    pos = kwargs.get("pos", [0, 0, 0])
+    #pos = copy.deepcopy(pos)
+    #pos[2] += -20
+
+    dep_main = depth
+    dep = dep_main
+
+    #add plate
+    p3 = copy.deepcopy(kwargs)
+    p3["type"] = "p"
+    p3["shape"] = f"oobb_circle"    
+    p3["depth"] = dep
+    p3["holes"] = True
+    #p3["m"] = "#"
+    pos1 = copy.deepcopy(pos)         
+    pos1[2] += -dep
+    p3["pos"] = pos1
+    oobb_base.append_full(thing,**p3)
+
+    #add holder bumps
+    if True:
+        p3 = copy.deepcopy(kwargs)
+        p3["type"] = "p"
+        p3["shape"] = f"rounded_rectangle"
+        wid = 10
+        hei = 5
+        dep = depth
+        size = [wid, hei, dep]
+        p3["size"] = size
+        p3["r"] = 2.5
+        pos1 = copy.deepcopy(pos)
+        pos1[2] += -dep
+        p3["pos"] = pos1    
+        rot1 = [0, 0, 0]
+        p3["rot"] = rot1
+        #p3["m"] = "#"
+        ribs = 17 #17 for oobb 3
+        
+        import math
+        for i in range(ribs):
+            angle = 360/ribs * i
+            shift = ((width * 15)  - 1) / 2 - 1.845
+
+            p4 = copy.deepcopy(p3)
+            pos1 = copy.deepcopy(p4["pos"])
+            #use trig to get the x and y
+            xx = pos1[0] + shift * math.cos(math.radians(angle))
+            yy = pos1[1] + shift * math.sin(math.radians(angle))
+
+            pos1[0] +=  xx
+            pos1[1] +=  yy
+            p4["pos"] = pos1
+
+            rot_shift1 = pos1
+            #p4["rot_shift"] = rot_shift1
+            rot1 = [0, 0, 360/ribs * i]
+            p4["rot"] = rot1
+            #p4["m"] = "#"   
+            oobb_base.append_full(thing,**p4)
+
+            
+        
+
+
+
+    
+    #add holes
+    p3 = copy.deepcopy(kwargs)
+    p3["type"] = "p"
+    p3["shape"] = f"oobb_holes"
+    p3["both_holes"] = True  
+    p3["radius_name"] = "m6"
+    p3["circle"] = True
+    p3["depth"] = depth
+    p3["holes"] = "all"
+    #p3["m"] = "#"
+    pos1 = copy.deepcopy(pos)
+    p3["pos"] = pos1
+    oobb_base.append_full(thing,**p3)
+
+    
+    #add screw_countersunk
+    p3 = copy.deepcopy(kwargs)
+    p3["type"] = "n"
+    p3["shape"] = f"oobb_screw_countersunk"
+    p3["radius_name"] = "m3"
+    p3["depth"] = depth
+    p3["both_holes"] = True
+    #p3["m"] = "#"
+    #do it for width
+    for i in range(height):
+        poss = []
+        pos1 = copy.deepcopy(pos)
+        pos1[1] += (height-1)/2 * 15 - i * 15
+        pos1[0] += (width-1)/2 * 15
+        if extra != "single_side":
+            poss.append(pos1)
+        pos2 = copy.deepcopy(pos1)        
+        pos2[0] *= -1
+        poss.append(pos2)
+
+        p3["pos"] = poss
+        #oobb_base.append_full(thing,**p3)
+
+
+
+
+    if prepare_print:
+        #put into a rotation object
+        components_second = copy.deepcopy(thing["components"])
+        return_value_2 = {}
+        return_value_2["type"]  = "rotation"
+        return_value_2["typetype"]  = "p"
+        pos1 = copy.deepcopy(pos)
+        pos1[0] += 50
+        return_value_2["pos"] = pos1
+        return_value_2["rot"] = [180,0,0]
+        return_value_2["objects"] = components_second
+        
+        thing["components"].append(return_value_2)
+
+    
+        #add slice # top
+        p3 = copy.deepcopy(kwargs)
+        p3["type"] = "n"
+        p3["shape"] = f"oobb_slice"
+        #p3["m"] = "#"
+        oobb_base.append_full(thing,**p3)
+    
+
+def get_rack(thing, **kwargs):
 
     depth = kwargs.get("thickness", 4)
     width = kwargs.get("width", 5)
