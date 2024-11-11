@@ -15,7 +15,7 @@ def make_scad(**kwargs):
         #filter = "test"
 
         kwargs["save_type"] = "none"
-        #kwargs["save_type"] = "all"
+        kwargs["save_type"] = "all"
         
         kwargs["overwrite"] = True
         
@@ -45,6 +45,7 @@ def make_scad(**kwargs):
         sizes.append([17, 5])
         sizes.append([19, 5])
         sizes.append([5, 19])
+        sizes.append([5, 23])
 
         extras = []
         extras.append("")
@@ -61,7 +62,7 @@ def make_scad(**kwargs):
         part_default["full_rotations"] = [0, 0, 0]
 
         #declare racks
-        if False:
+        if True:
             for extra in extras:
                 for typ in types:
                     for size in sizes:
@@ -81,10 +82,10 @@ def make_scad(**kwargs):
                         p3["height"] = height    
                         if extra_string != "":        
                             p3["extra"] = extra_string
-                        part["kwargs"] = p3
+                        part["kwargs"] = p3 
 
-                    part["name"] = "rack"
-                    parts.append(part)
+                        part["name"] = "rack"
+                        parts.append(part)
         #declare gears
         if True:
             diam = 3
