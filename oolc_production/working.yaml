@@ -2,7 +2,7 @@ project_id: oomlout_oobb_packaging_cardboard_roll
 project_name: Oomlout Oobb Packaging Cardboard Roll
 project_repo: https://github.com/oomlout/oomlout_oobb_packaging_cardboard_roll
 production_format:
-  oolc_1_slice_test:
+  oolc_1_oomlout_oobb_packaging_cardboard_roll_slicer_long_way_380_mm_height:
     file_location: source_files/oolc_1.cdr
   oolc_2_oomlout_oobb_packaging_cardboard_roll_slicer_long_way_300_mm_height:
     file_location: source_files/oolc_2.cdr

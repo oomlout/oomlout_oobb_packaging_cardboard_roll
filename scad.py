@@ -42,8 +42,10 @@ def make_scad(**kwargs):
         sizes.append([2, 5])
         sizes.append([2, 3])
         sizes.append([3, 3])
+        sizes.append([11, 5])
         sizes.append([17, 5])
         sizes.append([19, 5])
+        sizes.append([23, 5])
         sizes.append([5, 19])
         sizes.append([5, 23])
 
