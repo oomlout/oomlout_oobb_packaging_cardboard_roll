@@ -3,10 +3,10 @@
 
 ## formats
 
-### oolc_1_slice_test
-* link: [/oolc_1_slice_test](oolc_1_slice_test)  
-![](oolc_1_slice_test/working_300.png)  
-![](oolc_1_slice_test/image_300.jpg)  
+### oolc_1_oomlout_oobb_packaging_cardboard_roll_slicer_long_way_380_mm_height
+* link: [/oolc_1_oomlout_oobb_packaging_cardboard_roll_slicer_long_way_380_mm_height](oolc_1_oomlout_oobb_packaging_cardboard_roll_slicer_long_way_380_mm_height)  
+![](oolc_1_oomlout_oobb_packaging_cardboard_roll_slicer_long_way_380_mm_height/working_300.png)  
+![](oolc_1_oomlout_oobb_packaging_cardboard_roll_slicer_long_way_380_mm_height/image_300.jpg)  
 * width:   
 * height:   
 * thickness:   
